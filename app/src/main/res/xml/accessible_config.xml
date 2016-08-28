@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--我延时了1秒都才枪，防止被封号-->
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/accessible_description"
+    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityFeedbackType="feedbackAllMask"
+    android:packageNames="com.tencent.mm"
+    android:notificationTimeout="1000"
+    android:settingsActivity="xyz.monkeytong.hongbao.activities.SettingsActivity"
+    android:canRetrieveWindowContent="true"
+    />
