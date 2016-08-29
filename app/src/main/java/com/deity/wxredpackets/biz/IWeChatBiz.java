@@ -8,10 +8,14 @@ import android.view.accessibility.AccessibilityNodeInfo;
  * 1.一般来说，需要监听TYPE_WINDOW_STATE_CHANGED状态事件
  * Created by Deity on 2016/8/28.
  */
+@SuppressWarnings("unused")
 public interface IWeChatBiz {
     /**发送评论*/
     void sendComment();
-    /**监听通知栏*/
+    /**
+     * 监听通知栏
+     * 如果用户没有在微信界面，可以通过通知栏拦截微信红包消息
+     * */
     boolean watchNotifications(AccessibilityEvent event);
     /**获取最后一个节点*/
     AccessibilityNodeInfo getTheLastNode(String... texts);
