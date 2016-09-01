@@ -49,8 +49,11 @@ public class WeChatBizImpl implements IWeChatBiz {
         }
         //如果通知栏中没有指定的字符串，也不是微信红包
         if (event.getText().toString().equals(AppParameters.MSG_WECHAT_REDPACKET)){
+            //是否需要保存到数据库中
+            Log.d(TAG,"检测到红包信息,但是不知道打开了没");
             return true;
         }
+        Log.d(TAG,"未检测到红包信息");
         return false;
     }
 
@@ -117,6 +120,8 @@ public class WeChatBizImpl implements IWeChatBiz {
         List<AccessibilityNodeInfo> accessNodes = event.getSource().findAccessibilityNodeInfosByText(AppParameters.WECHAT_NOTIFICATION_TIP);
         if (!accessNodes.isEmpty()){
             AccessibilityNodeInfo accessNode = accessNodes.get(0);
+
+            Log.d(TAG,"聊天列表中检测到红包信息,并尝试打开");
             //TODO 检测当前的节点是否点击过
 //            CharSequence contentDescription = nodeToClick.getContentDescription();
 //            if (contentDescription != null && !lastContentDescription.equals(contentDescription)) {
@@ -127,6 +132,17 @@ public class WeChatBizImpl implements IWeChatBiz {
             accessNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             return true;
         }
+        return false;
+    }
+
+    /**
+     * 检测聊天信息中的红包
+     *
+     * @param event
+     */
+    @Override
+    public boolean watchWeChat(AccessibilityEvent event) {
+//        AccessibilityService
         return false;
     }
 }

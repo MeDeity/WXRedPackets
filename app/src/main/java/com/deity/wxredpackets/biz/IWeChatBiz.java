@@ -19,6 +19,10 @@ public interface IWeChatBiz {
      * 控制是否往下执行的标志
      * */
     boolean watchNotifications(AccessibilityEvent event);
+    /**检测聊天列表中的红包*/
+    boolean watchWeChatList(AccessibilityEvent event);
+    /**检测聊天信息中的红包*/
+    boolean watchWeChat(AccessibilityEvent event);
     /**获取最后一个节点*/
     AccessibilityNodeInfo getTheLastNode(String... texts);
     /**检测节点*/
@@ -27,7 +31,6 @@ public interface IWeChatBiz {
     AccessibilityNodeInfo mFindOpenButton(AccessibilityNodeInfo node);
     /**获取当前的页面信息*/
     void setCurrentActivityName(Context context,AccessibilityEvent event);
-    /**检测聊天界面中的红包，控制是否执行下去的标志*/
-    boolean watchWeChatList(AccessibilityEvent event);
+
 
 }
