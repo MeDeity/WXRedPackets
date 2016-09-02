@@ -7,12 +7,14 @@ public interface IWXRedPacketDao {
     /**添加红包信息到数据库*/
     WXRedPacketEntity addWXRedPacket(WXRedPacketEntity entity);
     /**更新红包信息*/
-    void updateWXRedPacket(WXRedPacketEntity entity);
+    void updateWXRedPacket(String redPacketSenderName, String redPacketReceiveTime);
     /**删除单个红包信息*/
-    WXRedPacketEntity deleteWXRedPacket(WXRedPacketEntity entity);
+    void deleteWXRedPacket(WXRedPacketEntity entity);
     /**根据时间批量删除红包信息*/
     void deleteWXRedPacketTx(long timestamp);
     /**清空所有的红包信息*/
     void deleteWXRedPacketTx();
+    /**查找特定的红包信息,通过发送人,及发送时间可以精确定位到特定的红包*/
+    WXRedPacketEntity queryWXRedPacket(String redPacketSenderName,String redPacketReceiveTime);
 
 }
