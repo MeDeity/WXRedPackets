@@ -1,10 +1,16 @@
 package com.deity.wxredpackets.biz;
 
+import android.accessibilityservice.AccessibilityService;
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Build;
+import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -51,6 +57,13 @@ public class WeChatBizImpl implements IWeChatBiz {
         if (event.getText().toString().equals(AppParameters.MSG_WECHAT_REDPACKET)){
             //是否需要保存到数据库中
             Log.d(TAG,"检测到红包信息,但是不知道打开了没");
+            Parcelable parcelable = event.getParcelableData();
+            if (parcelable instanceof Notification){
+                Notification notification = (Notification) parcelable;
+                try {
+                    notification.contentIntent.send();
+                } catch (PendingIntent.CanceledException e) {e.printStackTrace();}
+            }
             return true;
         }
         Log.d(TAG,"未检测到红包信息");
@@ -58,13 +71,48 @@ public class WeChatBizImpl implements IWeChatBiz {
     }
 
     @Override
-    public AccessibilityNodeInfo getTheLastNode(String... texts) {
-        return null;
+    public AccessibilityNodeInfo getTheLastNode(AccessibilityNodeInfo root,String... texts) {
+        if (null==root){
+            Log.d(TAG,"根目录为空,找不到红包节点");
+            return null;
+        }
+        AccessibilityNodeInfo lastNode = null;
+        for (String text:texts){
+            if (TextUtils.isEmpty(text)) continue;
+            Log.d(TAG,"当前查找的字符串为:"+text);
+            List<AccessibilityNodeInfo> nodeList = root.findAccessibilityNodeInfosByText(text);
+            if (null!=nodeList&&!nodeList.isEmpty()){
+                int size = nodeList.size();
+                Rect nodeRect = new Rect();
+                lastNode = nodeList.get(size-1);
+                if (null!=lastNode){
+                    Log.d(TAG,text+"找到红包节点");
+                }else {
+                    Log.d(TAG,text+"找不到红包节点");
+                }
+                //TODO 可见的情况下才可以被点开，防封号判断
+//                node.getBoundsInScreen(nodeRect);
+//                if (nodeRect.bottom>0&&)
+            }
+        }
+        if (null==lastNode){
+            Log.d(TAG,"找不到红包节点");
+        }else {
+            lastNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+        return lastNode;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void checkNodeInfo(AccessibilityEvent event) {
-
+    public void checkNodeInfo(AccessibilityNodeInfo root) {
+        if (null==root) return;
+        AccessibilityNodeInfo nodeInfo = getTheLastNode(root,AppParameters.WECHAT_VIEW_OTHERS_CH);
+        if (null!=nodeInfo) {
+            nodeInfo.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+        AccessibilityNodeInfo clickButton = mFindOpenButton(root);
+        clickButton(clickButton);
     }
 
     /**
@@ -107,7 +155,17 @@ public class WeChatBizImpl implements IWeChatBiz {
     }
 
     /**
-     * 检测聊天界面中的红包
+     * 点击按钮
+     */
+    @Override
+    public void clickButton(AccessibilityNodeInfo node) {
+        if (null!=node){
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+    }
+
+    /**
+     * 检测聊天列表中的红包信息
      *
      * @param event
      */
@@ -129,7 +187,7 @@ public class WeChatBizImpl implements IWeChatBiz {
 //                lastContentDescription = contentDescription.toString();
 //                return true;
 //            }
-            accessNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            clickButton(accessNode);
             return true;
         }
         return false;
@@ -137,12 +195,17 @@ public class WeChatBizImpl implements IWeChatBiz {
 
     /**
      * 检测聊天信息中的红包
-     *
+     * 需要检索retrieve window content的权限
      * @param event
      */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public boolean watchWeChat(AccessibilityEvent event) {
-//        AccessibilityService
+    public boolean watchWeChat(AccessibilityService mAccessibilityService, AccessibilityEvent event) {
+        //1.检测窗口是否可以获取
+        AccessibilityNodeInfo rootInActiveWindow = mAccessibilityService.getRootInActiveWindow();
+        if (null == rootInActiveWindow) return false;
+        //2.检测节点并打开
+        checkNodeInfo(rootInActiveWindow);
         return false;
     }
 }

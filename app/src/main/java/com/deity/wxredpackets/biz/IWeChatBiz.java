@@ -1,5 +1,6 @@
 package com.deity.wxredpackets.biz;
 
+import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -22,15 +23,17 @@ public interface IWeChatBiz {
     /**检测聊天列表中的红包*/
     boolean watchWeChatList(AccessibilityEvent event);
     /**检测聊天信息中的红包*/
-    boolean watchWeChat(AccessibilityEvent event);
+    boolean watchWeChat(AccessibilityService mAccessibilityService, AccessibilityEvent event);
     /**获取最后一个节点*/
-    AccessibilityNodeInfo getTheLastNode(String... texts);
+    AccessibilityNodeInfo getTheLastNode(AccessibilityNodeInfo root,String... texts);
     /**检测节点*/
-    void checkNodeInfo(AccessibilityEvent event);
+    void checkNodeInfo(AccessibilityNodeInfo root);
     /**找到红包打开的按钮*/
     AccessibilityNodeInfo mFindOpenButton(AccessibilityNodeInfo node);
     /**获取当前的页面信息*/
     void setCurrentActivityName(Context context,AccessibilityEvent event);
+    /**点击按钮*/
+    void clickButton(AccessibilityNodeInfo node);
 
 
 }
