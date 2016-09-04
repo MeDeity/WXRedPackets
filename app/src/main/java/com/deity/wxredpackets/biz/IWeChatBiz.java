@@ -34,6 +34,11 @@ public interface IWeChatBiz {
     void setCurrentActivityName(Context context,AccessibilityEvent event);
     /**点击按钮*/
     void clickButton(AccessibilityNodeInfo node);
+    /**
+     * 返回上一页面
+     * 如果检测到当前在以下页面 手慢了、明细表等
+     * */
+    void comeBack();
 
 
 }

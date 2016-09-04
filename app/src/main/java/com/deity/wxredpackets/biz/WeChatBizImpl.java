@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Build;
@@ -162,6 +163,15 @@ public class WeChatBizImpl implements IWeChatBiz {
         if (null!=node){
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
+    }
+
+    /**
+     * 返回上一页面
+     */
+    @Override
+    public void comeBack() {
+//        performGlobalAction(GLOBAL_ACTION_BACK);
+//        Intent startMain = new Intent()
     }
 
     /**
