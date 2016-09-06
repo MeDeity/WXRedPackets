@@ -49,13 +49,22 @@ public class WeChatBizImpl implements IWeChatBiz {
 
     }
 
+    /***
+     * 微信在防止外挂上，将Notifications的Type:TYPE_NOTIFICATION_STATE_CHANGED强制改变成了TYPE_WINDOW_CONTENT_CHANGED
+     * 目前状态栏监听主流上的抢红包软件功能全军覆没
+     * @param event
+     * @return
+     */
+    @Deprecated
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean watchNotifications(AccessibilityEvent event) {
         if (event.getEventType()!=AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED){//通知栏变动
             return false;
         }
+        Log.d(TAG,"检测通知栏成功...");
         //如果通知栏中没有指定的字符串，也不是微信红包
-        if (event.getText().toString().equals(AppParameters.MSG_WECHAT_REDPACKET)){
+        if (event.getText().toString().contains(AppParameters.MSG_WECHAT_REDPACKET)){
             //是否需要保存到数据库中
             Log.d(TAG,"检测到红包信息,但是不知道打开了没");
             Parcelable parcelable = event.getParcelableData();
@@ -71,10 +80,11 @@ public class WeChatBizImpl implements IWeChatBiz {
         return false;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public AccessibilityNodeInfo getTheLastNode(AccessibilityNodeInfo root,String... texts) {
-        if (null==root){
-            Log.d(TAG,"根目录为空,找不到红包节点");
+        if (null==root||!currentActivityName.contains(AppParameters.WECHAT_LUCKMONEY_GENERAL_ACTIVITY)){
+            Log.d(TAG,"根目录为空,找不到红包节点||不是聊天界面");
             return null;
         }
         AccessibilityNodeInfo lastNode = null;
@@ -127,7 +137,9 @@ public class WeChatBizImpl implements IWeChatBiz {
         int size = node.getChildCount();
         for (int i = 0;i<size;i++){
             AccessibilityNodeInfo nodeTemp = node.getChild(i);
+            if (TextUtils.isEmpty(nodeTemp.getClassName())) continue;
             if(nodeTemp.getClassName().equals(AppParameters.WIDGET_BUTTON)){//只要是按钮Button,立即返回
+                Log.d(TAG,"找到了按钮");
                 return nodeTemp;
             }
         }
@@ -187,17 +199,11 @@ public class WeChatBizImpl implements IWeChatBiz {
         }
         List<AccessibilityNodeInfo> accessNodes = event.getSource().findAccessibilityNodeInfosByText(AppParameters.WECHAT_NOTIFICATION_TIP);
         if (!accessNodes.isEmpty()){
-            AccessibilityNodeInfo accessNode = accessNodes.get(0);
+            AccessibilityNodeInfo nodeToClick = accessNodes.get(0);
 
             Log.d(TAG,"聊天列表中检测到红包信息,并尝试打开");
             //TODO 检测当前的节点是否点击过
-//            CharSequence contentDescription = nodeToClick.getContentDescription();
-//            if (contentDescription != null && !lastContentDescription.equals(contentDescription)) {
-//                nodeToClick.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                lastContentDescription = contentDescription.toString();
-//                return true;
-//            }
-            clickButton(accessNode);
+            clickButton(nodeToClick);
             return true;
         }
         return false;

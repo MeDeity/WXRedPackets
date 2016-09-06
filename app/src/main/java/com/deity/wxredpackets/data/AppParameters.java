@@ -18,6 +18,7 @@ public class AppParameters {
     public static final String WECHAT_NOTIFICATION_TIP = "[微信红包]";
     public static final String WECHAT_LUCKMONEY_RECEIVE_ACTIVITY = "LuckyMoneyReceiveUI";
     public static final String WECHAT_LUCKMONEY_DETAIL_ACTIVITY = "LuckyMoneyDetailUI";
+    /**聊天列表页面*/
     public static final String WECHAT_LUCKMONEY_GENERAL_ACTIVITY = "LauncherUI";
     public static final String WECHAT_LUCKMONEY_CHATTING_ACTIVITY = "ChattingUI";
 

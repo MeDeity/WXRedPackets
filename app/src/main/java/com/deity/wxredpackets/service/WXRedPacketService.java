@@ -23,13 +23,13 @@ public class WXRedPacketService extends AccessibilityService {
          * 3.拆开红包，成功后，更新数据库信息并关闭当前页面
          */
         mWeChatBiz.setCurrentActivityName(this,accessibilityEvent);
-        mWeChatBiz.watchNotifications(accessibilityEvent);
+        mWeChatBiz.watchNotifications(accessibilityEvent);// TYPE_NOTIFICATION_STATE_CHANGED 目前来看 该方法已经失效
         mWeChatBiz.watchWeChatList(accessibilityEvent);
         mWeChatBiz.watchWeChat(WXRedPacketService.this,accessibilityEvent);
     }
 
     @Override
     public void onInterrupt() {
-
+        Log.d(TAG,"onInterrupt>>>>");
     }
 }

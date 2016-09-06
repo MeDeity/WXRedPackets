@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--我延时了1秒都才枪，防止被封号-->
+<!--我延时了1秒都才枪，防止被封号 typeAllMask-->
 <accessibility-service
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/accessible_description"
-    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeNotificationStateChanged"
     android:accessibilityFeedbackType="feedbackAllMask"
     android:packageNames="com.tencent.mm"
     android:notificationTimeout="1000"

@@ -19,6 +19,7 @@ public interface IWeChatBiz {
      * 如果用户没有在微信界面，可以通过通知栏拦截微信红包消息
      * 控制是否往下执行的标志
      * */
+    @Deprecated
     boolean watchNotifications(AccessibilityEvent event);
     /**检测聊天列表中的红包*/
     boolean watchWeChatList(AccessibilityEvent event);
