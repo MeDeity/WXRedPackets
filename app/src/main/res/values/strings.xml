@@ -2,6 +2,15 @@
     <string name="app_name">微信红包助手</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
     <string name="accessible_description">①开启插件开关\n  ②打开微信\n </string>
+    <!-- -->
+    <string name="pref_watch_notification">pref_watch_notification</string>
+    <string name="pref_watch_wechatlist">pref_watch_wechatlist</string>
+    <string name="pref_watch_wechat">pref_watch_wechat</string>
+    <string name="pref_auto_open">pref_auto_open</string>
+    <string name="pref_auto_send">pref_auto_send</string>
+    <string name="pref_send_data">pref_send_data</string>
+    <string name="pref_lock_print">pref_lock_print</string>
+    <string name="already_get">已为您抢到了%1$s元</string>
 </resources>

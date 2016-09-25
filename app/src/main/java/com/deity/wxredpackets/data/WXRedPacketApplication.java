@@ -1,6 +1,8 @@
 package com.deity.wxredpackets.data;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -17,6 +19,10 @@ public class WXRedPacketApplication extends Application{
         super.onCreate();
         instance = this;
         initDB();
+    }
+
+    public SharedPreferences getSharePreference(){
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
     public void initDB(){

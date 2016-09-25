@@ -13,7 +13,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:name=".data.WXRedPacketApplication"
         android:supportsRtl="true"
@@ -21,6 +21,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <service
             android:name="com.deity.wxredpackets.service.WXRedPacketService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">

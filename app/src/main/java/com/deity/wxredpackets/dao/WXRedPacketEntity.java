@@ -1,5 +1,7 @@
 package com.deity.wxredpackets.dao;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,9 +14,12 @@ public class WXRedPacketEntity  extends RealmObject {
 
     @PrimaryKey
     private long redPacketId;//唯一标识符
-    private String redPacketSenderName;//微信红包发送者
-    private String redPacketReceiveTime;//微信红包接收时间
-    private boolean isPicked;//是否已经打开过了
+    private String redPacketSenderName="unknowSuperMan";//微信红包发送者
+    private String redPacketReceiveTime="unknowTime";//微信红包接收时间 --> 修改为拆包时间
+    private String redPacketOpenTime;//拆包时间
+    private String redPacketMessage="微信红包助手祝您:生意兴隆";//红包描述
+    private double redPacketMoney;//微信红包金额
+    private boolean isPicked=false;//是否已经打开过了
 
     public long getRedPacketId() {
         return redPacketId;
@@ -32,6 +37,14 @@ public class WXRedPacketEntity  extends RealmObject {
         this.redPacketSenderName = redPacketSenderName;
     }
 
+    public String getRedPacketMessage() {
+        return redPacketMessage;
+    }
+
+    public void setRedPacketMessage(String redPacketMessage) {
+        this.redPacketMessage = redPacketMessage;
+    }
+
     public String getRedPacketReceiveTime() {
         return redPacketReceiveTime;
     }
@@ -46,5 +59,21 @@ public class WXRedPacketEntity  extends RealmObject {
 
     public void setPicked(boolean picked) {
         isPicked = picked;
+    }
+
+    public double getRedPacketMoney() {
+        return redPacketMoney;
+    }
+
+    public void setRedPacketMoney(double redPacketMoney) {
+        this.redPacketMoney = redPacketMoney;
+    }
+
+    public String getRedPacketOpenTime() {
+        return redPacketOpenTime;
+    }
+
+    public void setRedPacketOpenTime(String redPacketOpenTime) {
+        this.redPacketOpenTime = redPacketOpenTime;
     }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="监控设置">
+        <CheckBoxPreference
+            android:key="@string/pref_watch_notification"
+            android:defaultValue="true"
+            android:layout="@layout/preference_checkbox"
+            android:title="监控通知栏的微信红包信息" />
+        <CheckBoxPreference
+            android:key="@string/pref_watch_wechatlist"
+            android:defaultValue="true"
+            android:layout="@layout/preference_checkbox"
+            android:title="监控聊天列表中微信红包信息" />
+        <CheckBoxPreference
+            android:key="@string/pref_watch_wechat"
+            android:defaultValue="true"
+            android:layout="@layout/preference_checkbox"
+            android:title="监控聊天界面的微信红包信息" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="防封号设置">
+        <CheckBoxPreference
+            android:key="@string/pref_auto_open"
+            android:defaultValue="true"
+            android:layout="@layout/preference_checkbox"
+            android:title="自动拆红包" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="自动回复设置">
+        <CheckBoxPreference
+            android:key="@string/pref_auto_send"
+            android:defaultValue="false"
+            android:layout="@layout/preference_checkbox"
+            android:title="自动@发红包的人" />
+        <EditTextPreference
+            android:key="@string/pref_send_data"
+            android:summary="随机感谢语(空格分隔):"
+            android:title="自定义回复内容(空格分隔)" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="特色功能">
+        <CheckBoxPreference
+            android:key="@string/pref_lock_print"
+            android:defaultValue="false"
+            android:layout="@layout/preference_checkbox"
+            android:title="锁屏抢红包" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
