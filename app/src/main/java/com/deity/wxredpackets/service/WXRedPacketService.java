@@ -46,9 +46,9 @@ public class WXRedPacketService extends AccessibilityService {
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
                 Log.e(TAG,"窗口内容发生变化");
                 mWeChatBiz.watchWeChat(WXRedPacketService.this,accessibilityEvent);
-                mWeChatBiz.watchWeChatList(accessibilityEvent);
+//                mWeChatBiz.watchWeChatList(accessibilityEvent);
                 mWeChatBiz.updateRedPacketMoney(WXRedPacketService.this);
-                mWeChatBiz.sendComment(WXRedPacketService.this.getRootInActiveWindow());
+//                mWeChatBiz.sendComment(WXRedPacketService.this.getRootInActiveWindow());
                 break;
 //            case AccessibilityEvent.TYPE_VIEW_SCROLLED:
 //                Log.e(TAG,"滚动Scroll");

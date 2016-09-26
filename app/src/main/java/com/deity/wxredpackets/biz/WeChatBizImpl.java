@@ -28,6 +28,7 @@ import com.deity.wxredpackets.data.WXRedPacketApplication;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Handler;
 
 /**
  * 微信业务逻辑实现
@@ -292,7 +293,14 @@ public class WeChatBizImpl implements IWeChatBiz {
             if (null!=clickButton) {
                 clickButton(clickButton);
                 if (null==currentPacketEntity) return;
-                WXRedPacketDaoImpl.getInstance().addWXRedPacket(currentPacketEntity);
+                int delay = WXRedPacketApplication.instance.getSharePreference().getInt("pref_open_delay",0);
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        WXRedPacketDaoImpl.getInstance().addWXRedPacket(currentPacketEntity);
+                    }
+                },delay*1000);
+
             }
         }
     }
@@ -328,7 +336,7 @@ public class WeChatBizImpl implements IWeChatBiz {
             Log.e(TAG,"回退操作");
             mAccessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
             //更新红包信息，当前已拆开
-            if (null!=currentPacketEntity) currentPacketEntity.setPicked(true);//已拆开
+//            if (null!=currentPacketEntity) currentPacketEntity.setPicked(true);//已拆开
         }
         //TODO 回到软件界面
 
