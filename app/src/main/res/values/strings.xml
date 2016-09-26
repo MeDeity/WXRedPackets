@@ -12,5 +12,6 @@
     <string name="pref_auto_send">pref_auto_send</string>
     <string name="pref_send_data">pref_send_data</string>
     <string name="pref_lock_print">pref_lock_print</string>
-    <string name="already_get">已为您抢到了%1$s元</string>
+    <string name="already_get">已为您抢到%1$s元</string>
+    <string name="aboutme">反馈问题请加QQ群:469832698或加微信:F_PlagueGod</string>
 </resources>

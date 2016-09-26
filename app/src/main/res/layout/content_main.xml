@@ -18,17 +18,34 @@
         android:orientation="vertical"
         app:layout_heightPercent="30%h">
 
-        <TextView
+        <com.deity.wxredpackets.widget.MarqueeText
             android:id="@+id/already_get"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/layout_control"
             android:layout_alignParentTop="true"
             android:layout_marginTop="40dp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="#fff"
             android:textIsSelectable="false"
             android:textSize="28dp" />
+
+        <com.deity.wxredpackets.widget.MarqueeText
+            android:id="@+id/addQQ"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_control"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/aboutme"
+            android:textColor="#fff" />
 
     </com.zhy.android.percent.support.PercentLinearLayout>
 
