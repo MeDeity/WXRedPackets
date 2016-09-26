@@ -289,15 +289,15 @@ public class WeChatBizImpl implements IWeChatBiz {
     public void openRedPacket(AccessibilityNodeInfo root) {
         if (!WXRedPacketApplication.instance.getSharePreference().getBoolean("pref_auto_open",true)) return;
         if (null!=root&&currentActivityName.contains(AppParameters.WECHAT_LUCKMONEY_RECEIVE_ACTIVITY)) {
-            AccessibilityNodeInfo clickButton = mFindOpenButton(root);
+            final AccessibilityNodeInfo clickButton = mFindOpenButton(root);
             if (null!=clickButton) {
-                clickButton(clickButton);
                 if (null==currentPacketEntity) return;
+                WXRedPacketDaoImpl.getInstance().addWXRedPacket(currentPacketEntity);
                 int delay = WXRedPacketApplication.instance.getSharePreference().getInt("pref_open_delay",0);
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        WXRedPacketDaoImpl.getInstance().addWXRedPacket(currentPacketEntity);
+                        clickButton(clickButton);
                     }
                 },delay*1000);
 

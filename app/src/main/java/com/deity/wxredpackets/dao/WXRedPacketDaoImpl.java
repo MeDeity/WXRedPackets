@@ -117,10 +117,10 @@ public class WXRedPacketDaoImpl implements IWXRedPacketDao {
         RealmResults<WXRedPacketEntity> entities = Realm.getDefaultInstance().where(WXRedPacketEntity.class).findAll();
         if (!entities.isEmpty()){
             for (WXRedPacketEntity entity:entities){
-                totalMoney+=entity.getRedPacketMoney();
+                totalMoney+=entity.getRedPacketMoney()*100;
             }
         }
-        return totalMoney;
+        return totalMoney/100;
     }
 
     public RealmResults<WXRedPacketEntity> queryWXRedPacket() {
