@@ -14,4 +14,5 @@
     <string name="pref_lock_print">pref_lock_print</string>
     <string name="already_get">已为您抢到%1$s元</string>
     <string name="aboutme">反馈问题请加QQ群:469832698或加微信:F_PlagueGod</string>
+    <string name="dialog_help">找到[微信红包助手],并开启它[开始抢红包]或关闭它[退出抢红包]</string>
 </resources>

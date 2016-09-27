@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -102,7 +105,17 @@ public class MainActivity extends AppCompatActivity
         btn_control.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openAccessibility();
+                View dialog_help = getLayoutInflater().inflate(R.layout.dialog_help,null);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("提示信息")
+                        .setMessage(WXRedPacketApplication.instance.getResources().getString(R.string.dialog_help))
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                openAccessibility();
+                            }
+                        })
+                        .setNegativeButton("取消",null).show();
             }
         });
         btn_setting.setOnClickListener(new View.OnClickListener() {
@@ -228,11 +241,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void openService() {
         btn_control.setText("开启插件");
+        btn_control.setTextColor(getResources().getColor(R.color.colorAccent));
+
     }
 
     @Override
     public void closeService() {
         btn_control.setText("关闭插件");
+        btn_control.setTextColor(getResources().getColor(R.color.colorGreen));
     }
 
     public void updateRecord(){

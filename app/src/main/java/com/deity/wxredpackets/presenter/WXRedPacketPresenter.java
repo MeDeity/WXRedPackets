@@ -21,10 +21,10 @@ public class WXRedPacketPresenter {
     public void updateServiceState(AccessibilityManager manager){
         if (mWeChatBiz.isServiceEnable(manager)){
             mWXRedPacketView.closeService();
-            mWXRedPacketView.clearNotification();
+            mWXRedPacketView.createNotification();
         }else {
             mWXRedPacketView.openService();
-            mWXRedPacketView.createNotification();
+            mWXRedPacketView.clearNotification();
         }
     }
 }
