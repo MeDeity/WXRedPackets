@@ -97,7 +97,7 @@ public class WeChatBizImpl implements IWeChatBiz {
         if (!WXRedPacketApplication.instance.getSharePreference().getBoolean("pref_auto_send",true)) return;
         if (null==root) return;
         if (null==currentPacketEntity||currentPacketEntity.isPicked()) {
-            editComment(root,true);//清空EditText
+//            editComment(root,true);//清空EditText
             return;
         }
         if (currentActivityName.contains(AppParameters.WECHAT_LUCKMONEY_GENERAL_ACTIVITY)) {
@@ -179,7 +179,7 @@ public class WeChatBizImpl implements IWeChatBiz {
         if (null!=nodeInfo) {
             //TODO 进行保存并记录
             if (isNewRedPacketData(nodeInfo)){
-                editComment(root,false);//感谢语
+//                editComment(root,false);//感谢语
                 nodeInfo.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
             return true;

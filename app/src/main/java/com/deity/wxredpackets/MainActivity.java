@@ -9,14 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -108,7 +103,7 @@ public class MainActivity extends AppCompatActivity
                 View dialog_help = getLayoutInflater().inflate(R.layout.dialog_help,null);
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("提示信息")
-                        .setMessage(WXRedPacketApplication.instance.getResources().getString(R.string.dialog_help))
+                        .setMessage("找到[微信红包助手],并开启它[开始抢红包]或关闭它[退出抢红包]")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -156,7 +151,7 @@ public class MainActivity extends AppCompatActivity
         // API16之后才支持
         Notification serviceRunNormal = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setTicker("TickerText:" + "您有新消息，请注意查收！")
+                .setTicker(WXRedPacketApplication.instance.getResources().getString(R.string.app_name)+"正在为您服务!")
                 .setContentTitle(WXRedPacketApplication.instance.getResources().getString(R.string.app_name)+"正在为您服务!")
                 .setContentText("如果看到这条消息,代表服务正常运行!")
                 .setContentIntent(pendingIntent3).setNumber(1).build(); // 需要注意build()是在API
