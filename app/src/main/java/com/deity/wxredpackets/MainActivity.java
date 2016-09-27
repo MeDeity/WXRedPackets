@@ -1,6 +1,9 @@
 package com.deity.wxredpackets;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     public RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
     private final String TAG = MainActivity.class.getSimpleName();
+    private static final int NOTIFICATION_FLAG = 1;
+    private NotificationManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +64,9 @@ public class MainActivity extends AppCompatActivity
         initAccessibility();
         ButterKnife.bind(this);
         initViews();
+        // 在Android进行通知处理，首先需要重系统哪里获得通知管理器NotificationManager，它是一个系统Service。
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void initViews(){
@@ -130,6 +129,29 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mRedPacketAdapter);
     }
 
+    @Override
+    public void clearNotification(){
+        // 清除id为NOTIFICATION_FLAG的通知
+        manager.cancel(NOTIFICATION_FLAG);
+    }
+
+    @Override
+    public void createNotification(){
+        PendingIntent pendingIntent3 = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), 0);
+        // 通过Notification.Builder来创建通知，注意API Level
+        // API16之后才支持
+        Notification serviceRunNormal = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setTicker("TickerText:" + "您有新消息，请注意查收！")
+                .setContentTitle(WXRedPacketApplication.instance.getResources().getString(R.string.app_name)+"正在为您服务!")
+                .setContentText("如果看到这条消息,代表服务正常运行!")
+                .setContentIntent(pendingIntent3).setNumber(1).build(); // 需要注意build()是在API
+        // level16及之后增加的，API11可以使用getNotificatin()来替代
+        serviceRunNormal.flags |= Notification.FLAG_NO_CLEAR; // FLAG_AUTO_CANCEL表明当通知被用户点击时，通知将被清除。
+        manager.notify(NOTIFICATION_FLAG, serviceRunNormal);// 步骤4：通过通知管理器来发起通知。如果id不同，则每click，在status哪里增加一个提示
+    }
+
     public void initAccessibility(){
         //监听AccessibilityService 变化
         accessibilityManager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
@@ -178,31 +200,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
     @SuppressWarnings("unused")
     @OnClick(R.id.btn_control)
     private void openAccessibility() {
@@ -231,7 +228,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void openService() {
         btn_control.setText("开启插件");
-
     }
 
     @Override

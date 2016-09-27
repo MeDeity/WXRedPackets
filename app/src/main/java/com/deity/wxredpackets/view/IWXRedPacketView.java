@@ -6,4 +6,6 @@ package com.deity.wxredpackets.view;
 public interface IWXRedPacketView {
     void openService();
     void closeService();
+    void createNotification();
+    void clearNotification();
 }
