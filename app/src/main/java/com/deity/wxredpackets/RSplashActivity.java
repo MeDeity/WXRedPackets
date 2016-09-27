@@ -48,7 +48,7 @@ public class RSplashActivity extends Activity {
                 // 设置开屏可接受点击时，该回调可用
             }
         };
-        String adPlaceId = "2058622"; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
+        String adPlaceId = "2932170"; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
         new SplashAd(this, adsParent, listener, adPlaceId, true);
     }
 
