@@ -3,6 +3,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">设置</string>
+    <string name="action_clear">清空记录</string>
+    <string name="action_say">免责声明</string>
+    <string name="action_avoid_close">防封号</string>
     <string name="accessible_description">①开启插件开关\n  ②打开微信\n </string>
     <!-- -->
     <string name="pref_watch_notification">pref_watch_notification</string>
@@ -14,4 +17,10 @@
     <string name="pref_lock_print">pref_lock_print</string>
     <string name="already_get">已为您抢到%1$s元</string>
     <string name="aboutme">反馈问题请加QQ群:469832698或加微信:F_PlagueGod</string>
+    <string name="get_money_fail">臣妾不知道呀!</string>
+    <string name="get_i_cant">臣妾无能,还未给主子带来收益!</string>
+    <string name="app_share">抢红包怎么能没有一个好工具呢,快试试这个抢红包神器吧!\n  http://www.wandoujia.com/apps/com.deity.wxredpackets</string>
+    <string name="open_function">找到[微信红包助手]并打开，臣妾将竭诚为您服务! </string>
+    <string name="tips_avoid_close">使用系统内置的安全软件或第三方软件禁用微信读取手机识别码权限\n ①下载LBE安全大师，找到[安全与隐私] \n ②找到[权限管理]，并点击 \n ③ 找到[按权限分类]，并点击\n 找到读取软件信息/手机识别码 \n ④ 找到[微信],禁止[读取软件信息]/[手机识别码]</string>
+    <string name="tips_mianze">本软件仅供业余娱乐消遣用,一切因使用该软件产生的任何纠纷由用户自行承担，本软件概不负责，亦不承担任何法律责任!</string>
 </resources>

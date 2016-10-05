@@ -150,7 +150,7 @@ public class WeChatBizImpl implements IWeChatBiz {
         AccessibilityNodeInfo lastNode = null,tmpNode;
         for (String text:texts){
             if (TextUtils.isEmpty(text)) continue;
-            Log.e(TAG,"当前查找的字符串为:"+text);
+//            Log.e(TAG,"当前查找的字符串为:"+text);
             List<AccessibilityNodeInfo> nodeList = root.findAccessibilityNodeInfosByText(text);
             if (null!=nodeList&&!nodeList.isEmpty()){
                 int size = nodeList.size();
@@ -189,25 +189,34 @@ public class WeChatBizImpl implements IWeChatBiz {
     /**保存红包信息到数据库*/
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean isNewRedPacketData(AccessibilityNodeInfo nodeInfo){//领取红包，查看红包 节点
-        if (null==nodeInfo) return false;
-        AccessibilityNodeInfo parentNode = nodeInfo.getParent();
-        if (null==parentNode) return false;
-        /**节点必须是LINEARLAYOUT*/
-        String clzName = TextUtils.isEmpty(parentNode.getClassName())?"":parentNode.getClassName().toString();
-        if (!AppParameters.WIDGET_LINEARLAYOUT.equals(clzName)) return false;
-        /**子节点必须包含特定字符串*/
-        String redPacketContent = parentNode.getChild(0).getText().toString();
-        if (TextUtils.isEmpty(redPacketContent)||redPacketContent.equals(AppParameters.WECHAT_VIEW_SELF_CH)) return false;
-        AccessibilityNodeInfo granpaNode = parentNode.getParent();
-        /**在屏幕中必须是可见的*/
-        Rect rect = new Rect();
-        granpaNode.getBoundsInScreen(rect);
-        if (rect.top<0) return false;
-        WXRedPacketEntity entity =  getRedPacketMessage(redPacketContent,granpaNode);
-        //防止多次打开同一个红包
-        if (null!=currentPacketEntity&&currentPacketEntity.getRedPacketSenderName().equals(entity.getRedPacketSenderName())&&currentPacketEntity.getRedPacketReceiveTime().equals(entity.getRedPacketReceiveTime())&&currentPacketEntity.getRedPacketMessage().equals(entity.getRedPacketMessage())) return false;
-        currentPacketEntity = entity;
-        return true;
+        try {
+            if (null == nodeInfo) return false;
+            AccessibilityNodeInfo parentNode = nodeInfo.getParent();
+            if (null == parentNode) return false;
+            /**节点必须是LINEARLAYOUT*/
+            String clzName = TextUtils.isEmpty(parentNode.getClassName()) ? "" : parentNode.getClassName().toString();
+            if (!AppParameters.WIDGET_LINEARLAYOUT.equals(clzName)) return false;
+            /**子节点必须包含特定字符串*/
+            if (null==parentNode.getChild(0)) return false;
+            CharSequence redPacketContent = parentNode.getChild(0).getText();//防不胜防啊 Attempt to invoke virtual method 'java.lang.CharSequence android.view.accessibility.AccessibilityNodeInfo.getText()' on a null object reference
+            if (TextUtils.isEmpty(redPacketContent) || redPacketContent.equals(AppParameters.WECHAT_VIEW_SELF_CH))
+                return false;
+            AccessibilityNodeInfo granpaNode = parentNode.getParent();
+            /**在屏幕中必须是可见的*/
+            Rect rect = new Rect();
+            granpaNode.getBoundsInScreen(rect);
+            if (rect.top < 0) return false;
+            WXRedPacketEntity entity = getRedPacketMessage(redPacketContent.toString(), granpaNode);
+            //防止多次打开同一个红包
+            if (null != currentPacketEntity && currentPacketEntity.getRedPacketSenderName().equals(entity.getRedPacketSenderName()) && currentPacketEntity.getRedPacketReceiveTime().equals(entity.getRedPacketReceiveTime()) && currentPacketEntity.getRedPacketMessage().equals(entity.getRedPacketMessage()))
+                return false;
+            currentPacketEntity = entity;
+            return true;
+        }catch (Exception e){
+            //等待加入Budly
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public WXRedPacketEntity getRedPacketMessage(String redPacketContent,AccessibilityNodeInfo node){
@@ -405,26 +414,62 @@ public class WeChatBizImpl implements IWeChatBiz {
         return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void updateRedPacketMoney(AccessibilityService mAccessibilityService){
         if (null!=currentPacketEntity&&!currentPacketEntity.isPicked()&&currentActivityName.contains(AppParameters.WECHAT_LUCKMONEY_DETAIL_ACTIVITY)){
             //1.检测窗口是否可以获取
             AccessibilityNodeInfo rootInActiveWindow = mAccessibilityService.getRootInActiveWindow();
             if (null == rootInActiveWindow) return;
-            List<AccessibilityNodeInfo> childNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId(AppParameters.WIDGET_MONEY_ID);
+            List<AccessibilityNodeInfo> childNodes = rootInActiveWindow.findAccessibilityNodeInfosByText(AppParameters.UNIT_YUAN);
             if (null!=childNodes&&!childNodes.isEmpty()){
-                double moneyValue=0.0;
-                AccessibilityNodeInfo moneyNode = childNodes.get(0);
-                try {
-                    moneyValue = Double.parseDouble(moneyNode.getText().toString());
-                }catch (Exception e){//转化失败
-                    Log.e(TAG,moneyNode.getText().toString()+"转Double失败");
+                AccessibilityNodeInfo unitNode = childNodes.get(0);//获取第一个值
+                if (null==unitNode) return;
+                AccessibilityNodeInfo relativeNode = unitNode.getParent();//包含金额内容
+                if (null==relativeNode) return;//||!relativeNode.getClassName().equals(AppParameters.WIDGET_RELATIVELAYOUT) 调试发现是LinearLayout
+                int size = relativeNode.getChildCount();
+                for (int i=0;i<size;i++){
+                    AccessibilityNodeInfo moneyNode = relativeNode.getChild(i);
+                    if (moneyNode.getClassName().equals(AppParameters.WIDGET_TEXTVIEW)&&!TextUtils.isEmpty(moneyNode.getText())&&!moneyNode.getText().toString().contains(AppParameters.UNIT_YUAN)){//TextView 非单位 元
+                        double moneyValue;
+                        try {
+                            moneyValue = Double.parseDouble(moneyNode.getText().toString());
+                            currentPacketEntity.setRedPacketMoney(moneyValue);
+                            WXRedPacketDaoImpl.getInstance().updateWXRedPacket(currentPacketEntity);
+                        }catch (Exception e){//转化失败
+                            Log.e(TAG,"获取红包金额失败");
+                            e.printStackTrace();
+                        }
+                        Log.e(TAG,"over come back");
+                        comeBack(mAccessibilityService);
+                    }
                 }
-                currentPacketEntity.setRedPacketMoney(moneyValue);
-                WXRedPacketDaoImpl.getInstance().updateWXRedPacket(currentPacketEntity);
-                Log.e(TAG,"over come back");
-                comeBack(mAccessibilityService);
             }
         }
     }
+
+    /**
+     * 很不幸，不同的手机，控件的ID是不一样的，因此通过ID获取控件的是不可取的
+     * @param mAccessibilityService
+     */
+//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+//    public void updateRedPacketMoney(AccessibilityService mAccessibilityService){
+//        if (null!=currentPacketEntity&&!currentPacketEntity.isPicked()&&currentActivityName.contains(AppParameters.WECHAT_LUCKMONEY_DETAIL_ACTIVITY)){
+//            //1.检测窗口是否可以获取
+//            AccessibilityNodeInfo rootInActiveWindow = mAccessibilityService.getRootInActiveWindow();
+//            if (null == rootInActiveWindow) return;
+//            List<AccessibilityNodeInfo> childNodes = rootInActiveWindow.findAccessibilityNodeInfosByViewId(AppParameters.WIDGET_MONEY_ID);
+//            if (null!=childNodes&&!childNodes.isEmpty()){
+//                double moneyValue=0.0;
+//                AccessibilityNodeInfo moneyNode = childNodes.get(0);
+//                try {
+//                    moneyValue = Double.parseDouble(moneyNode.getText().toString());
+//                }catch (Exception e){//转化失败
+//                    Log.e(TAG,moneyNode.getText().toString()+"转Double失败");
+//                }
+//                currentPacketEntity.setRedPacketMoney(moneyValue);
+//                WXRedPacketDaoImpl.getInstance().updateWXRedPacket(currentPacketEntity);
+//                Log.e(TAG,"over come back");
+//                comeBack(mAccessibilityService);
+//            }
+//        }
+//    }
 }

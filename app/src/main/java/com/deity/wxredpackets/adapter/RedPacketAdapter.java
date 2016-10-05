@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.deity.wxredpackets.R;
 import com.deity.wxredpackets.dao.WXRedPacketEntity;
+import com.deity.wxredpackets.data.WXRedPacketApplication;
 import com.deity.wxredpackets.widget.MarqueeText;
 
 import java.util.ArrayList;
@@ -48,7 +49,11 @@ public class RedPacketAdapter extends RecyclerView.Adapter<RedPacketAdapter.View
         holder.redPacketSenderName.setText(entity.getRedPacketSenderName());
         holder.redPacketTime.setText(entity.getRedPacketOpenTime());
         holder.redPacketContent.setText(entity.getRedPacketMessage());
-        holder.redPacketMoney.setText(String.valueOf(entity.getRedPacketMoney()+"元"));
+        if (0.0==entity.getRedPacketMoney()){
+            holder.redPacketMoney.setText(WXRedPacketApplication.instance.getResources().getText(R.string.get_money_fail));
+        }else {
+            holder.redPacketMoney.setText(String.valueOf(entity.getRedPacketMoney() + "元"));
+        }
     }
 
     @Override

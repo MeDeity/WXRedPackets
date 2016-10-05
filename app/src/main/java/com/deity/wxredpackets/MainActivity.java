@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 //    @BindView(R.id.btn_control) public Button btn_control;/**没网络，gradle下载不了*/
     public Button btn_control;
     public Button btn_setting;
-    public Button btn_clear;
+    public Button btn_avoid;
     public Button btn_share;
     public TextView already_get;
     private RedPacketAdapter mRedPacketAdapter;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         packetPresenter = new WXRedPacketPresenter(this);
         btn_control = (Button) this.findViewById(R.id.btn_control);
         btn_setting = (Button) this.findViewById(R.id.btn_setting);
-        btn_clear = (Button) this.findViewById(R.id.btn_clear);
+        btn_avoid = (Button) this.findViewById(R.id.btn_avoid);
         btn_share = (Button) this.findViewById(R.id.btn_share);
         already_get = (TextView) this.findViewById(R.id.already_get);
         btn_share.setOnClickListener(new View.OnClickListener() {
@@ -80,21 +80,10 @@ public class MainActivity extends AppCompatActivity
                 shareApp();
             }
         });
-        btn_clear.setOnClickListener(new View.OnClickListener() {
+        btn_avoid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("警告")
-                        .setMessage("该操作将清空抢红包记录，是否继续?")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                WXRedPacketDaoImpl.getInstance().deleteWXRedPacketTx();
-                                updateRecord();
-                            }
-                        })
-                        .setNegativeButton("取消",null).show();
-
+                avoidClose();
             }
         });
         btn_control.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +109,39 @@ public class MainActivity extends AppCompatActivity
             }
         });
         initRecycleView();
+    }
+
+    public void actionClear(){
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("警告")
+                .setMessage("该操作将清空抢红包记录，是否继续?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        WXRedPacketDaoImpl.getInstance().deleteWXRedPacketTx();
+                        updateRecord();
+                    }
+                })
+                .setNegativeButton("取消",null).show();
+    }
+
+    public void avoidClose(){
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("警告信息")
+                .setMessage(WXRedPacketApplication.instance.getString(R.string.tips_avoid_close))
+                .setPositiveButton("确定", null)
+                .setNegativeButton("取消",null).show();
+    }
+
+    /**
+     * 免责声明
+     */
+    public void actionSay(){
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("警告信息")
+                .setMessage(WXRedPacketApplication.instance.getString(R.string.tips_mianze))
+                .setPositiveButton("确定", null)
+                .setNegativeButton("取消",null).show();
     }
 
     public void initRecycleView(){
@@ -201,9 +223,20 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            openSettings();
-            return true;
+//        if (id == R.id.action_settings) {
+//            openSettings();
+//            return true;
+//        }
+        switch (id){
+            case R.id.action_setting:
+                openSettings();
+                return true;
+            case R.id.action_clear:
+                actionClear();
+                return true;
+            case R.id.action_say:
+                actionSay();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -249,8 +282,13 @@ public class MainActivity extends AppCompatActivity
     public void updateRecord(){
         mRedPacketAdapter.setData(WXRedPacketDaoImpl.getInstance().queryWXRedPacket());
         mRedPacketAdapter.notifyDataSetChanged();
-        Log.e(TAG,"已为您抢到了"+WXRedPacketDaoImpl.getInstance().queryTotalMoney()+"元");
-        already_get.setText(String.format(WXRedPacketApplication.instance.getResources().getString(R.string.already_get),WXRedPacketDaoImpl.getInstance().queryTotalMoney()));
+        double alreadyGetMoney = WXRedPacketDaoImpl.getInstance().queryTotalMoney();
+        Log.e(TAG,"已为您抢到了"+alreadyGetMoney+"元");
+        if (0.0==alreadyGetMoney){
+            already_get.setText(WXRedPacketApplication.instance.getText(R.string.get_i_cant));
+        }else {
+            already_get.setText(String.format(WXRedPacketApplication.instance.getResources().getString(R.string.already_get), alreadyGetMoney));
+        }
     }
 
     @Override
@@ -263,7 +301,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT,"告诉好友有个好应用");
-        intent.putExtra(Intent.EXTRA_TEXT,"抢红包怎么能没有一个好工具呢,快试试在应用商店搜索[微信红包助手]吧");
+        intent.putExtra(Intent.EXTRA_TEXT,WXRedPacketApplication.instance.getString(R.string.app_share));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(intent,getTitle()));
 

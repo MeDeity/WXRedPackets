@@ -7,7 +7,6 @@ package com.deity.wxredpackets.data;
 public class AppParameters {
     public static final String MSG_WECHAT_GET_REDPACKET="领取红包";
     public static final String MSG_WECHAT_REDPACKET="[微信红包]";
-    public static final String MSG_WECHAT_REDPACKET_RECIVE="[已发送]";//小米测试，text已修改成[已发送]
 
     public static final String WECHAT_DETAILS_EN = "Details";
     public static final String WECHAT_DETAILS_CH = "红包详情";
@@ -28,6 +27,9 @@ public class AppParameters {
     public static final String WIDGET_LINEARLAYOUT="android.widget.LinearLayout";
     public static final String WIDGET_IMAGEVIEW="android.widget.ImageView";
     public static final String WIDGET_TEXTVIEW="android.widget.TextView";
+    public static final String WIDGET_RELATIVELAYOUT="android.widget.RelativeLayout";
+    public static final String UNIT_YUAN="元";
+
     /**金额按钮*/
     public static final String WIDGET_MONEY_ID="com.tencent.mm:id/b90";
     /**编辑框按钮*/
