@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
                 View dialog_help = getLayoutInflater().inflate(R.layout.dialog_help,null);
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("提示信息")
-                        .setMessage("找到[微信红包助手],并开启它[开始抢红包]或关闭它[退出抢红包]")
+                        .setMessage(WXRedPacketApplication.instance.getString(R.string.open_function))
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
